@@ -33,13 +33,20 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 app.get("/profile", isLoggedin, async (req, res) => {
-  let user = await userModel.findOne({ email: req.user.email }).populate('posts')
+  let user = await userModel
+    .findOne({ email: req.user.email })
+    .populate("posts");
   console.log(user);
   res.render("profile", { user });
 });
 app.get("/logout", (req, res) => {
   res.cookie("token", "");
   res.redirect("/");
+});
+app.get("/delete/:userId", async (req, res) => {
+  await postModel.findByIdAndDelete({ _id: req.params.userId });
+
+  res.redirect("/profile");
 });
 
 app.post("/register", async (req, res) => {
@@ -99,10 +106,10 @@ app.post("/post", isLoggedin, async (req, res) => {
   console.log(post);
 });
 
-// const PORT = 9092;
+const PORT = 9092;
 
-// app.listen(PORT, () => {
-//   console.log(`App working on port ${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`App working on port ${PORT}`);
+});
 
 export default app;
