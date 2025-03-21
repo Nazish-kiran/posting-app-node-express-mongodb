@@ -95,8 +95,10 @@ app.post("/post", isLoggedin, async (req, res) => {
   console.log(post);
 });
 
-const PORT = 9092;
+// const PORT = 9092;
 
-app.listen(PORT, () => {
-  console.log(`App working on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`App working on port ${PORT}`);
+// });
+
+export default app;
