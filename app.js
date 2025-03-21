@@ -5,11 +5,15 @@ import postModel from "./models/posts.js";
 import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 app.set("view engine", "ejs");
-app.use(express.static(path.join(import.meta.dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
