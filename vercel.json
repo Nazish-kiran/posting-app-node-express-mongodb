@@ -11,6 +11,9 @@
         "src": "/(.*)",
         "dest": "app.js"
       }
-    ]
+    ],
+    "env": {
+      "MONGO_URI": "@MONGO_URI"
+    }
   }
   
