@@ -1,13 +1,27 @@
 import mongoose from "mongoose";
 import { type } from "os";
+import dotenv from "dotenv";
+dotenv.config(); // Load environment variables
 
-const url =
-  "mongodb+srv://nazish:admin123@cluster1.9rs1f.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1";
+import mongoose from "mongoose";
 
-mongoose
-  .connect(url)
-  .then(() => console.log("Connected to MongoDB Atlas"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log("MongoDB Connected");
+}).catch(err => {
+  console.error("MongoDB connection error:", err);
+});
+
+
+// const url =
+//   "mongodb+srv://nazish:admin123@cluster1.9rs1f.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1";
+
+// mongoose
+//   .connect(url)
+//   .then(() => console.log("Connected to MongoDB Atlas"))
+//   .catch((err) => console.error("MongoDB connection error:", err));
 
 const userSchema = new mongoose.Schema({
   username: String,
