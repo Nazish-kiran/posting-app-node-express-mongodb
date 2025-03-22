@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import user from "./models/user.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -46,16 +47,24 @@ app.get("/delete/:userId", async (req, res) => {
   let post = await postModel.findByIdAndDelete(req.params.userId);
   res.redirect("/profile");
 });
-app.get("/like/:userId", isLoggedin ,async (req, res) => {
+app.get("/like/:userId", isLoggedin, async (req, res) => {
   let post = await postModel.findById(req.params.userId).populate("user");
-  console.log("userid" , req.user);
-  if (post.likes.indexOf(req.user._id) === -1) {
-    post.likes.push(req.user._id);
+  console.log("userid", req.user);
+  if (post.likes.indexOf(req.user.userId) === -1) {
+    post.likes.push(req.user.userId);
   } else {
-    post.likes.splice(post.likes.indexOf(req.user._id), 1);
+    post.likes.splice(post.likes.indexOf(req.user.userId), 1);
   }
   await post.save();
   res.redirect("/profile");
+});
+app.get("/edit/:userId", isLoggedin, async (req, res) => {
+  let post = await postModel.findById(req.params.userId).populate("user");
+  res.render("edit", { post });
+});
+app.get("/test", isLoggedin, async (req, res) => {
+  let post = await postModel.findById(req.params.userId).populate("user");
+  res.render("edit", { post });
 });
 
 app.post("/register", async (req, res) => {
@@ -111,6 +120,13 @@ app.post("/post", isLoggedin, async (req, res) => {
   });
   user.posts.push(post._id);
   await user.save();
+  res.redirect("/profile");
+});
+app.post("/update/:userId", isLoggedin, async (req, res) => {
+  let post = await postModel.findByIdAndUpdate(req.params.userId, {
+    content: req.body.content,
+  });
+
   res.redirect("/profile");
 });
 

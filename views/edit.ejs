@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <div class="w-full min-h-screen bg-zinc-900 text-white p-10">
+      <h5 class="mb-6">edit your post.</h5>
+      <form action="/update/<%=post._id%>" method="post">
+        <textarea
+          name="content"
+          id=""
+          class="w-1/3 resize-none bg-trasparent border-2 border-zinc-800 rounded-md p-3 outline-none"
+          placeholder="What'son your mind ?"
+        >
+<%= post.content%></textarea
+        >
+        <button
+          type="submit"
+          class="px-3 w-40 py-2 bg-green-500 block rounded-md mt-2 text-sm"
+        >
+          Update post
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
