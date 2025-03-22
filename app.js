@@ -36,7 +36,6 @@ app.get("/profile", isLoggedin, async (req, res) => {
   let user = await userModel
     .findOne({ email: req.user.email })
     .populate("posts");
-  console.log(user);
   res.render("profile", { user });
 });
 app.get("/logout", (req, res) => {
@@ -44,8 +43,18 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 app.get("/delete/:userId", async (req, res) => {
-  await postModel.findByIdAndDelete({ _id: req.params.userId });
-
+  let post = await postModel.findByIdAndDelete(req.params.userId);
+  res.redirect("/profile");
+});
+app.get("/like/:userId", isLoggedin ,async (req, res) => {
+  let post = await postModel.findById(req.params.userId).populate("user");
+  console.log("userid" , req.user);
+  if (post.likes.indexOf(req.user._id) === -1) {
+    post.likes.push(req.user._id);
+  } else {
+    post.likes.splice(post.likes.indexOf(req.user._id), 1);
+  }
+  await post.save();
   res.redirect("/profile");
 });
 
@@ -103,7 +112,6 @@ app.post("/post", isLoggedin, async (req, res) => {
   user.posts.push(post._id);
   await user.save();
   res.redirect("/profile");
-  console.log(post);
 });
 
 const PORT = 9092;
