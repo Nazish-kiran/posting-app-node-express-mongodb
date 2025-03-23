@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
       ref: "Post",
     },
   ],
+  profilePic: {
+    type: String,
+    default: "default.webp",
+  }
 });
 
 export default mongoose.model("User", userSchema);
