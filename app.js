@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import multerconfig from "./config/multerconfig.js";
+import upload from "./config/multerconfig.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -17,8 +17,6 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-
 
 const isLoggedin = async (req, res, next) => {
   if (!req.cookies.token) {
@@ -40,6 +38,9 @@ app.get("/profile", isLoggedin, async (req, res) => {
     .findOne({ email: req.user.email })
     .populate("posts");
   res.render("profile", { user });
+});
+app.get("/profile/upload", isLoggedin, async (req, res) => {
+  res.render("profileUpload");
 });
 app.get("/logout", (req, res) => {
   res.cookie("token", "");
@@ -127,7 +128,12 @@ app.post("/update/:userId", isLoggedin, async (req, res) => {
 
   res.redirect("/profile");
 });
-
+app.post("/upload", upload.single("image"), isLoggedin, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  user.profilePic = req.file.filename;
+  await user.save();
+  res.redirect("/profile");
+});
 
 const PORT = 9092;
 
