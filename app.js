@@ -7,7 +7,6 @@ import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import user from "./models/user.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -17,6 +16,8 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+
 
 const isLoggedin = async (req, res, next) => {
   if (!req.cookies.token) {
@@ -64,7 +65,7 @@ app.get("/edit/:userId", isLoggedin, async (req, res) => {
 });
 app.get("/test", isLoggedin, async (req, res) => {
   let post = await postModel.findById(req.params.userId).populate("user");
-  res.render("edit", { post });
+  res.render("test");
 });
 
 app.post("/register", async (req, res) => {
@@ -128,6 +129,10 @@ app.post("/update/:userId", isLoggedin, async (req, res) => {
   });
 
   res.redirect("/profile");
+});
+app.post("/upload", upload.single('image'), async (req, res) => {
+  console.log(req.file);
+  res.redirect("/test")
 });
 
 const PORT = 9092;
